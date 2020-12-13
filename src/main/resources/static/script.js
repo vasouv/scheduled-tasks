@@ -1,19 +1,34 @@
-var ctx = document.getElementById('myChart').getContext('2d');
-var chart = new Chart(ctx, {
-    // The type of chart we want to create
-    type: 'line',
+window.addEventListener('load', (event) => {
+    fetch('http://localhost:8080/votes')
+        .then(response => response.json())
+        .then(data => console.log(data));
 
-    // The data for our dataset
+});
+
+let candidates = ["Candidate A", "Candidate B"];
+let votes = [148, 123];
+let colors = ["#49A9EA", "#36CAAB"];
+
+let pollChart = document.getElementById('pollChart').getContext('2d');
+let chart = new Chart(pollChart, {
+    type: 'horizontalBar',
+
     data: {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        labels: candidates,
         datasets: [{
-            label: 'My First dataset',
-            backgroundColor: 'rgb(255, 99, 132)',
-            borderColor: 'rgb(255, 99, 132)',
-            data: [0, 10, 5, 2, 20, 30, 45]
+            data: votes,
+            backgroundColor: colors
         }]
     },
 
     // Configuration options go here
-    options: {}
+    options: {
+        title: {
+            text: "Total number of votes",
+            display: true
+        },
+        legend: {
+            display: false
+        }
+    }
 });

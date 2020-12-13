@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import javax.annotation.PostConstruct;
+
 @Slf4j
 @Service
 public class VotingService {
@@ -17,6 +19,11 @@ public class VotingService {
     private List<Vote> votes = new ArrayList<>();
     private ObjectMapper mapper = new ObjectMapper();
     private Random random = new Random();
+
+    @PostConstruct
+    public void init(){
+        addVote();
+    }
 
     public List<Vote> findAllVotes() {
         return votes;
@@ -33,7 +40,7 @@ public class VotingService {
 
     }
 
-    @Scheduled(fixedDelay = 3000)
+    // @Scheduled(fixedDelay = 3000)
     public void addVote() {
 
         // add a number of votes
