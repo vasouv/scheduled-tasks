@@ -20,23 +20,34 @@ public class VotingService {
     private ObjectMapper mapper = new ObjectMapper();
     private Random random = new Random();
 
+    private final String CANDIDATE_A = "Candidate A";
+    private final String CANDIDATE_B = "Candidate B";
+
     @PostConstruct
-    public void init(){
+    public void init() {
         addVote();
     }
 
     public List<Vote> findAllVotes() {
+        // to delete
+        sample();
         return votes;
     }
 
+    private void sample() {
+        this.votes.clear();
+        addVote();
+    }
+
     public ObjectNode summary() {
-        var candidateAVotes = votes.stream().filter(v -> v.candidate.equals(Candidate.CANDIDATE_A)).count();
-        var candidateBVotes = votes.stream().filter(v -> v.candidate.equals(Candidate.CANDIDATE_B)).count();
+        sample();
+        var candidateAVotes = this.votes.stream().filter(v -> v.candidate.equals(CANDIDATE_A)).count();
+        var candidateBVotes = this.votes.stream().filter(v -> v.candidate.equals(CANDIDATE_B)).count();
 
         return mapper.createObjectNode()
-                .put(Candidate.CANDIDATE_A.toLowerCase(), candidateAVotes)
-                .put(Candidate.CANDIDATE_B.toLowerCase(), candidateBVotes)
-                .put("total", votes.size());
+            .put(CANDIDATE_A.toLowerCase(), candidateAVotes)
+            .put(CANDIDATE_B.toLowerCase(), candidateBVotes)
+            .put("total", this.votes.size());
 
     }
 
@@ -49,9 +60,9 @@ public class VotingService {
         // for each vote, go for 50%-50% on the candidates
         for (int i = 0; i < numberOfVotes; i++) {
             if (randomNumber(1, 3) == 1) {
-                votes.add(new Vote(Candidate.CANDIDATE_A));
+                votes.add(new Vote(i, CANDIDATE_A));
             } else {
-                votes.add(new Vote(Candidate.CANDIDATE_B));
+                votes.add(new Vote(i, CANDIDATE_B));
             }
         }
 
