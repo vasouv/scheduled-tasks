@@ -1,20 +1,19 @@
 package vs.scheduledcharts;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
 import javax.annotation.PostConstruct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
-@Slf4j
 @Service
 public class VotingService {
+
+    private static final Logger log = LoggerFactory.getLogger(VotingService.class);
 
     private List<Vote> votes = new ArrayList<>();
     private ObjectMapper mapper = new ObjectMapper();
@@ -41,13 +40,13 @@ public class VotingService {
 
     public ObjectNode summary() {
         sample();
-        var candidateAVotes = this.votes.stream().filter(v -> v.candidate.equals(CANDIDATE_A)).count();
-        var candidateBVotes = this.votes.stream().filter(v -> v.candidate.equals(CANDIDATE_B)).count();
+        var candidateAVotes =
+                this.votes.stream().filter(v -> v.candidate().equals(CANDIDATE_A)).count();
+        var candidateBVotes =
+                this.votes.stream().filter(v -> v.candidate().equals(CANDIDATE_B)).count();
 
-        return mapper.createObjectNode()
-            .put(CANDIDATE_A.toLowerCase(), candidateAVotes)
-            .put(CANDIDATE_B.toLowerCase(), candidateBVotes)
-            .put("total", this.votes.size());
+        return mapper.createObjectNode().put(CANDIDATE_A.toLowerCase(), candidateAVotes)
+                .put(CANDIDATE_B.toLowerCase(), candidateBVotes).put("total", this.votes.size());
 
     }
 
