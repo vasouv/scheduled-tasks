@@ -3,9 +3,16 @@ let colors = ["#49A9EA", "#36CAAB"];
 
 // asynchronously calls the backend and returns the response
 async function getVotes() {
-    let response = await fetch("http://localhost:8080/votes");
-    let data = await response.json();
-    return data;
+	try {
+		let response = await fetch("http://localhost:8080/votes");
+		let data = await response.json();
+    	return data;	
+	} catch (error){
+		console.log("Failed to fetch from backend");
+		let error2 = {"candidate a":0, "candidate b":0};
+		return error2;
+	}
+    
 }
 
 // creates the chart
@@ -42,7 +49,10 @@ async function createChart() {
             },
             scales: {
                 xAxes: [{
-                    offset: true
+                    offset: true,
+					ticks: {
+						beginAtZero: true
+					}
                 }]
             },
 			responsive: false
@@ -50,4 +60,4 @@ async function createChart() {
     });
 }
 
-createChart();
+window.setInterval('createChart()', 5000);
