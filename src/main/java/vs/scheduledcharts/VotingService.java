@@ -3,9 +3,9 @@ package vs.scheduledcharts;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -22,24 +22,11 @@ public class VotingService {
     private final String CANDIDATE_A = "Candidate A";
     private final String CANDIDATE_B = "Candidate B";
 
-    @PostConstruct
-    public void init() {
-        addVote();
-    }
-
     public List<Vote> findAllVotes() {
-        // to delete
-        sample();
         return votes;
     }
 
-    private void sample() {
-        this.votes.clear();
-        addVote();
-    }
-
     public ObjectNode summary() {
-        sample();
         var candidateAVotes =
                 this.votes.stream().filter(v -> v.candidate().equals(CANDIDATE_A)).count();
         var candidateBVotes =
@@ -47,10 +34,9 @@ public class VotingService {
 
         return mapper.createObjectNode().put(CANDIDATE_A.toLowerCase(), candidateAVotes)
                 .put(CANDIDATE_B.toLowerCase(), candidateBVotes).put("total", this.votes.size());
-
     }
 
-    // @Scheduled(fixedDelay = 3000)
+    @Scheduled(fixedDelay = 3000)
     public void addVote() {
 
         // add a number of votes

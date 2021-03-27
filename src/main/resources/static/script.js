@@ -44,7 +44,8 @@ async function createChart() {
                 xAxes: [{
                     offset: true
                 }]
-            }
+            },
+			responsive: false
         }
     });
 }
